@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PonzuCollectiva — MemeRevo · Burn Memes to ETH · Tiered Collectiva</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6.9.0/dist/ethers.umd.min.js"></script>
+  <style>
+    :root {
+      --bg: #0d0b0a;
+      --bg-panel: #161210;
+      --bg-card: #1c1816;
+      --border: #2e2824;
+      --border-soft: #221e1b;
+      --inferno: #ff4d22;
+      --inferno-dim: #e63d14;
+      --ponzu: #f5a623;
+      --ponzu-dim: #d4921e;
+      --mint: #22c997;
+      --mint-dim: #1aa87a;
+      --text: #f0ebe6;
+      --text-dim: #8c847a;
+      --glow-inferno: rgba(255, 77, 34, 0.15);
+      --glow-ponzu: rgba(245, 166, 35, 0.12);
+      --radius: 12px;
+      --radius-sm: 8px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+      background-image: radial-gradient(ellipse 90% 60% at 50% -10%, rgba(255, 77, 34, 0.08), transparent 50%),
+        radial-gradient(ellipse 70% 40% at 80% 60%, rgba(245, 166, 35, 0.06), transparent 40%);
+    }
+    .app { max-width: 960px; margin: 0 auto; padding: 1.5rem 1.25rem; }
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;

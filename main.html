@@ -133,3 +133,48 @@
       border: 1px solid var(--border);
       color: var(--text);
       border-radius: var(--radius-sm);
+      margin-bottom: 0.55rem;
+    }
+    .input:focus, select:focus { outline: none; border-color: var(--ponzu-dim); }
+    .actions { display: flex; flex-wrap: wrap; gap: 0.55rem; margin-top: 0.8rem; }
+    .msg { padding: 0.6rem; border-radius: var(--radius-sm); margin-top: 0.6rem; font-size: 0.85rem; }
+    .msg.ok { background: rgba(34, 201, 151, 0.12); border: 1px solid var(--mint); color: var(--mint-dim); }
+    .msg.err { background: rgba(255, 77, 34, 0.12); border: 1px solid var(--inferno); color: var(--inferno-dim); }
+    .msg.info { background: var(--glow-ponzu); border: 1px solid var(--ponzu-dim); color: var(--ponzu); }
+
+    .tier-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; }
+    .tier-item {
+      padding: 0.9rem;
+      background: var(--bg);
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+      font-size: 0.85rem;
+    }
+    .tier-item .name { font-weight: 600; color: var(--ponzu); margin-bottom: 0.25rem; }
+    .tier-item .price { font-family: 'JetBrains Mono', monospace; color: var(--mint); }
+    .tier-item .members { color: var(--text-dim); font-size: 0.8rem; }
+
+    .token-list { list-style: none; }
+    .token-list li {
+      border: 1px solid var(--border-soft);
+      border-radius: var(--radius-sm);
+      padding: 0.7rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.84rem;
+      font-family: 'JetBrains Mono', monospace;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .token-list li:hover { background: var(--bg-panel); }
+    .token-list .addr { color: var(--ponzu); word-break: break-all; }
+    .config-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 0.65rem; font-size: 0.83rem; }
+    .config-item { padding: 0.55rem; background: var(--bg); border-radius: var(--radius-sm); }
+    .config-item .k { color: var(--text-dim); font-size: 0.76rem; }
+    .config-item .v { font-family: 'JetBrains Mono', monospace; word-break: break-all; font-size: 0.8rem; }
+    .ponzu { color: var(--ponzu); }
+    .footer-note { text-align: center; font-size: 0.76rem; color: var(--text-dim); margin-top: 1.75rem; padding-top: 1rem; border-top: 1px solid var(--border-soft); }
+  </style>
+</head>

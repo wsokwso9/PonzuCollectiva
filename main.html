@@ -403,3 +403,48 @@
           statMembers.textContent = memberCount.toString();
           statPaused.textContent = cfg.paused_ ? 'Paused' : 'Active';
           if (userAddress) {
+            const joined = await c.hasJoined(userAddress);
+            if (joined) {
+              const info = await c.getMemberInfo(userAddress);
+              const name = await c.getTierName(info[0]).catch(() => 'Tier ' + info[0]);
+              statTier.textContent = name;
+            } else statTier.textContent = '—';
+          } else statTier.textContent = '—';
+        } catch (e) {
+          statInferno.textContent = '—';
+          statMembers.textContent = '—';
+          statTier.textContent = '—';
+          statPaused.textContent = '—';
+        }
+      }
+
+      document.getElementById('btn-connect').addEventListener('click', connectWallet);
+
+      document.querySelectorAll('.tab').forEach(function (tab) {
+        tab.addEventListener('click', function () {
+          document.querySelectorAll('.tab').forEach(function (t) { t.classList.remove('active'); });
+          document.querySelectorAll('.panel').forEach(function (p) { p.classList.remove('visible'); });
+          tab.classList.add('active');
+          const id = 'panel-' + tab.getAttribute('data-tab');
+          const panel = document.getElementById(id);
+          if (panel) panel.classList.add('visible');
+          if (id === 'panel-join') loadJoinPanel();
+          if (id === 'panel-membership') loadMembership();
+          if (id === 'panel-tokens') loadTokens();
+          if (id === 'panel-stats') loadStats();
+          if (id === 'panel-config') loadConfig();
+        });
+      });
+
+      async function updateJoinPrice() {
+        const tier = parseInt(document.getElementById('join-tier').value, 10) || 1;
+        const el = document.getElementById('join-price-display');
+        const refEl = document.getElementById('join-referral-estimate');
+        const c = getContract(true);
+        if (!c) {
+          el.placeholder = 'Set contract';
+          if (refEl) refEl.textContent = 'Referral reward (if referrer set): —';
+          return;
+        }
+        try {
+          const info = await c.getTierInfo(tier);

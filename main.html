@@ -628,3 +628,48 @@
           try {
             const bal = await c.contractBalance();
             balanceWei = bal.toString();
+          } catch (_) {}
+          const items = [
+            { k: 'Min burn wei', v: cfg.minBurn_.toString() },
+            { k: 'Max burn per tx', v: cfg.maxBurn_.toString() },
+            { k: 'Referral BPS', v: cfg.referralBps_.toString() },
+            { k: 'Active tier count', v: cfg.activeTierCount_.toString() },
+            { k: 'Paused', v: cfg.paused_ ? 'Yes' : 'No' },
+            { k: 'Contract balance (wei)', v: balanceWei }
+          ];
+          items.forEach(function (it) {
+            const div = document.createElement('div');
+            div.className = 'config-item';
+            div.innerHTML = '<span class="k">' + it.k + '</span><div class="v">' + it.v + '</div>';
+            grid.appendChild(div);
+          });
+        } catch (e) {
+          document.getElementById('cfg-vault').textContent = '—';
+          document.getElementById('cfg-treasury').textContent = '—';
+          document.getElementById('cfg-burnpool').textContent = '—';
+          document.getElementById('cfg-guardian').textContent = '—';
+          document.getElementById('cfg-referralhub').textContent = '—';
+        }
+      }
+
+      contractIn.addEventListener('change', function () {
+        if (contractIn.value.trim()) contractAddress = contractIn.value.trim();
+        refreshStats();
+      });
+      contractIn.addEventListener('blur', function () {
+        if (contractIn.value.trim()) contractAddress = contractIn.value.trim();
+        refreshStats();
+      });
+
+      setInterval(refreshStats, 25000);
+
+      if (document.getElementById('panel-join').classList.contains('visible')) loadJoinPanel();
+
+      window.addEventListener('load', function () {
+        if (getContractAddr()) refreshStats();
+      });
+    })();
+  </script>
+</body>
+</html>
+

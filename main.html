@@ -493,3 +493,48 @@
         const tierId = parseInt(document.getElementById('join-tier').value, 10) || 1;
         let referrer = (document.getElementById('join-referrer').value || '').trim();
         if (!referrer) referrer = '0x0000000000000000000000000000000000000000';
+        try {
+          const info = await c.getTierInfo(tierId);
+          const tx = await c.joinCollectiva(tierId, referrer, { value: info.joinPriceWei });
+          showMsg('join-msg', 'Tx sent: ' + tx.hash, 'info');
+          await tx.wait();
+          showMsg('join-msg', 'Joined Collectiva.', 'ok');
+          await refreshStats();
+          loadTierGrid();
+        } catch (e) { showMsg('join-msg', e.message || 'Join failed', 'err'); }
+      });
+
+      document.getElementById('btn-inferno').addEventListener('click', async function () {
+        hideMsg('inferno-msg');
+        const c = getContract(false);
+        if (!c || !userAddress) { showMsg('inferno-msg', 'Connect wallet and set contract.', 'err'); return; }
+        const token = (document.getElementById('inferno-token').value || '').trim();
+        const amountStr = (document.getElementById('inferno-amount').value || '').trim();
+        if (!token || !amountStr) { showMsg('inferno-msg', 'Enter token address and amount.', 'err'); return; }
+        let amount;
+        try { amount = BigInt(amountStr); } catch (_) { showMsg('inferno-msg', 'Invalid amount.', 'err'); return; }
+        try {
+          const tx = await c.infernoBurn(token, amount);
+          showMsg('inferno-msg', 'Tx sent: ' + tx.hash, 'info');
+          const rec = await tx.wait();
+          showMsg('inferno-msg', 'Burned. Tx: ' + rec.hash, 'ok');
+          await refreshStats();
+        } catch (e) { showMsg('inferno-msg', e.message || 'Inferno failed', 'err'); }
+      });
+
+      async function loadMembership() {
+        const content = document.getElementById('membership-content');
+        const empty = document.getElementById('membership-empty');
+        const burnEl = document.getElementById('burn-stats-content');
+        content.innerHTML = '';
+        const c = getContract(true);
+        if (!c || !userAddress) {
+          empty.style.display = 'block';
+          burnEl.textContent = '—';
+          return;
+        }
+        try {
+          const joined = await c.hasJoined(userAddress);
+          if (!joined) {
+            empty.style.display = 'block';
+            burnEl.textContent = '—';

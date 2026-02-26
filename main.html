@@ -448,3 +448,48 @@
         }
         try {
           const info = await c.getTierInfo(tier);
+          const eth = ethers.formatEther(info.joinPriceWei);
+          el.placeholder = eth + ' ETH';
+          const cfg = await c.getConfig();
+          const refBps = Number(cfg.referralBps_ || 0);
+          const refWei = (info.joinPriceWei * BigInt(refBps)) / BigInt(10000);
+          if (refEl) refEl.textContent = 'Referral reward (if referrer set): ' + ethers.formatEther(refWei) + ' ETH';
+        } catch (_) {
+          el.placeholder = '—';
+          if (refEl) refEl.textContent = 'Referral reward (if referrer set): —';
+        }
+      }
+      document.getElementById('join-tier').addEventListener('change', updateJoinPrice);
+
+      async function loadTierGrid() {
+        const grid = document.getElementById('tier-grid');
+        grid.innerHTML = '';
+        const c = getContract(true);
+        if (!c) return;
+        try {
+          const cfg = await c.getConfig();
+          const maxTiers = Number(cfg.activeTierCount_ || 4);
+          for (let tierId = 1; tierId <= maxTiers; tierId++) {
+            const info = await c.getTierInfo(tierId);
+            if (!info.active) continue;
+            const name = await c.getTierName(tierId).catch(() => 'Tier ' + tierId);
+            const div = document.createElement('div');
+            div.className = 'tier-item';
+            div.innerHTML = '<div class="name">' + name + '</div><div class="price">' + ethers.formatEther(info.joinPriceWei) + ' ETH</div><div class="members">Members: ' + info.memberCount.toString() + ' · Share BPS: ' + info.shareBps.toString() + '</div>';
+            grid.appendChild(div);
+          }
+        } catch (_) {}
+      }
+
+      async function loadJoinPanel() {
+        await updateJoinPrice();
+        await loadTierGrid();
+      }
+
+      document.getElementById('btn-join').addEventListener('click', async function () {
+        hideMsg('join-msg');
+        const c = getContract(false);
+        if (!c || !userAddress) { showMsg('join-msg', 'Connect wallet and set contract.', 'err'); return; }
+        const tierId = parseInt(document.getElementById('join-tier').value, 10) || 1;
+        let referrer = (document.getElementById('join-referrer').value || '').trim();
+        if (!referrer) referrer = '0x0000000000000000000000000000000000000000';

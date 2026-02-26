@@ -538,3 +538,48 @@
           if (!joined) {
             empty.style.display = 'block';
             burnEl.textContent = '—';
+            return;
+          }
+          empty.style.display = 'none';
+          const info = await c.getMemberInfo(userAddress);
+          const name = await c.getTierName(info[0]).catch(() => 'Tier ' + info[0]);
+          let html = '<p><strong>Tier:</strong> ' + name + '</p>';
+          html += '<p><strong>Joined at block:</strong> ' + info.joinedAtBlock.toString() + '</p>';
+          html += '<p><strong>Total paid:</strong> ' + ethers.formatEther(info.totalPaidWei) + ' ETH</p>';
+          html += '<p><strong>Total earned:</strong> ' + ethers.formatEther(info.totalEarnedWei) + ' ETH</p>';
+          html += '<p><strong>Referrer:</strong> ' + (info.referrer || '—') + '</p>';
+          content.innerHTML = html;
+          const burnStats = await c.getBurnStats(userAddress);
+          burnEl.textContent = 'Total burned (wei): ' + burnStats[0].toString() + ', Burn count: ' + burnStats[1].toString();
+        } catch (e) {
+          content.innerHTML = '<p class="msg err">' + (e.message || 'Load failed') + '</p>';
+          burnEl.textContent = '—';
+        }
+      }
+
+      document.getElementById('btn-refresh-membership').addEventListener('click', loadMembership);
+
+      async function loadTokens() {
+        const list = document.getElementById('tokens-list');
+        const empty = document.getElementById('tokens-empty');
+        list.innerHTML = '';
+        const c = getContract(true);
+        if (!c) {
+          empty.style.display = 'block';
+          return;
+        }
+        try {
+          const tokens = await c.getWhitelistedTokens();
+          if (!tokens || tokens.length === 0) {
+            empty.style.display = 'block';
+            return;
+          }
+          empty.style.display = 'none';
+          tokens.forEach(function (addr) {
+            if (addr === '0x0000000000000000000000000000000000000000') return;
+            const li = document.createElement('li');
+            li.innerHTML = '<span class="addr">' + addr + '</span>';
+            list.appendChild(li);
+          });
+        } catch (e) {
+          empty.style.display = 'block';

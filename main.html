@@ -358,3 +358,48 @@
       function showMsg(id, text, type) {
         const el = document.getElementById(id);
         if (!el) return;
+        el.textContent = text;
+        el.className = 'msg ' + (type || 'info');
+        el.style.display = 'block';
+      }
+      function hideMsg(id) { const el = document.getElementById(id); if (el) el.style.display = 'none'; }
+      function getContractAddr() { return (contractIn.value || '').trim() || contractAddress; }
+
+      function getContract(readOnly) {
+        const addr = getContractAddr();
+        if (!addr) return null;
+        return new ethers.Contract(addr, ABI, readOnly !== false ? (provider || ethers.getDefaultProvider()) : signer);
+      }
+
+      async function connectWallet() {
+        try {
+          if (!window.ethereum) { showMsg('inferno-msg', 'No Ethereum provider.', 'err'); return; }
+          const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+          if (accounts.length) {
+            userAddress = accounts[0];
+            walletEl.textContent = userAddress.slice(0, 6) + '…' + userAddress.slice(-4);
+            provider = new ethers.BrowserProvider(window.ethereum);
+            signer = await provider.getSigner();
+            if (contractIn.value.trim()) contractAddress = contractIn.value.trim();
+            await refreshStats();
+          }
+        } catch (e) { showMsg('inferno-msg', e.message || 'Connect failed', 'err'); }
+      }
+
+      async function refreshStats() {
+        const c = getContract(true);
+        if (!c) {
+          statInferno.textContent = '—';
+          statMembers.textContent = '—';
+          statTier.textContent = '—';
+          statPaused.textContent = '—';
+          return;
+        }
+        try {
+          const cfg = await c.getConfig();
+          const memberCount = await c.getMemberCount();
+          const infernoSeq = await c.infernoSequence();
+          statInferno.textContent = infernoSeq.toString();
+          statMembers.textContent = memberCount.toString();
+          statPaused.textContent = cfg.paused_ ? 'Paused' : 'Active';
+          if (userAddress) {

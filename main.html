@@ -313,3 +313,48 @@
         <li><strong class="ponzu">Tiers:</strong> Higher tiers cost more and allocate a larger share to members. Owner can add or deactivate tiers; guardian can emergency-pause the collectiva.</li>
       </ul>
     </div>
+
+    <div class="card" style="margin-top: 1rem;">
+      <h3>About PonzuCollectiva</h3>
+      <p style="color: var(--text-dim); font-size: 0.9rem; line-height: 1.6;">PonzuCollectiva is the web interface for the MemeRevo (MRV) contract. MemeRevo is a meme revolution platform: send whitelisted meme tokens into the inferno — they are burned or forwarded to the burn pool; any ETH from conversions is split between vault and treasury. Join the Collectiva with ETH: choose a tier (Bronze, Silver, Gold, Diamond). A share of your payment goes to existing members in your tier (ponzi-style), a referral cut to your referrer if set, and the rest to the vault. One membership per address. Guardian can emergency-pause; owner manages whitelist and tier config. Safe for EVM mainnets when deployed with verified addresses.</p>
+      <p style="color: var(--text-dim); font-size: 0.82rem; margin-top: 0.6rem;">Constants: MRV_BPS_BASE 10000, MRV_MAX_TIERS 8, MRV_MAX_REFERRAL_BPS 1500, MRV_MAX_BURN_BATCH 16. Immutable: vault, treasury, burn pool, referral hub. Guardian is rotatable by owner.</p>
+      <p style="color: var(--text-dim); font-size: 0.8rem; margin-top: 0.4rem;">This UI does not hold keys or custody; all transactions are signed in your wallet. Verify the contract address before joining or burning.</p>
+    </div>
+
+    <p class="footer-note">PonzuCollectiva · MemeRevo (MRV) · Burn meme tokens to ETH · Tiered membership · Not financial advice. Verify contract on-chain before use.</p>
+  </div>
+
+  <script>
+    (function () {
+      const ABI = [
+        'function getConfig() view returns (uint256 minBurn_, uint256 maxBurn_, uint256 referralBps_, uint8 activeTierCount_, bool paused_)',
+        'function getTierInfo(uint8 tierId) view returns (uint256 joinPriceWei, uint256 shareBps, bool active, uint256 memberCount, uint256 totalCollectedWei)',
+        'function getMemberInfo(address account) view returns (uint8 tierId, uint256 joinedAtBlock, uint256 totalPaidWei, uint256 totalEarnedWei, address referrer)',
+        'function getWhitelistedTokens() view returns (address[])',
+        'function getMemberCount() view returns (uint256)',
+        'function infernoSequence() view returns (uint256)',
+        'function joinCollectiva(uint8 tierId, address referrer) payable',
+        'function infernoBurn(address token, uint256 amount) returns (uint256 ethOut)',
+        'function hasJoined(address account) view returns (bool)',
+        'function getBurnStats(address account) view returns (uint256 totalBurnedWei, uint256 burnCount, uint256 totalEthOut)',
+        'function getImmutableAddresses() view returns (address vault_, address treasury_, address burnPool_, address guardian_, address referralHub_)',
+        'function tierSnapshotSequence() view returns (uint256)',
+        'function collectivaPaused() view returns (bool)',
+        'function getTierName(uint8 tierId) view returns (string memory)',
+        'function contractBalance() view returns (uint256)'
+      ];
+      let provider = null;
+      let signer = null;
+      let userAddress = null;
+      let contractAddress = null;
+
+      const contractIn = document.getElementById('contract-address');
+      const walletEl = document.getElementById('wallet-addr');
+      const statInferno = document.getElementById('stat-inferno');
+      const statMembers = document.getElementById('stat-members');
+      const statTier = document.getElementById('stat-tier');
+      const statPaused = document.getElementById('stat-paused');
+
+      function showMsg(id, text, type) {
+        const el = document.getElementById(id);
+        if (!el) return;

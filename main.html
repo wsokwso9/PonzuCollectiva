@@ -268,3 +268,48 @@
         <h4>My burn stats</h4>
         <div id="burn-stats-content" style="color: var(--text-dim); font-size: 0.85rem;">—</div>
       </div>
+    </div>
+
+    <div id="panel-tokens" class="panel">
+      <div class="card">
+        <h3>Whitelisted meme tokens</h3>
+        <p style="color: var(--text-dim); font-size: 0.88rem; margin-bottom: 0.75rem;">Only these tokens can be sent to the inferno. Owner adds/removes via contract.</p>
+        <div class="actions"><button type="button" id="btn-refresh-tokens" class="btn ponzu small">Refresh</button></div>
+        <ul id="tokens-list" class="token-list"></ul>
+        <div id="tokens-empty" style="display:none; color: var(--text-dim);">No whitelisted tokens or contract not set.</div>
+        <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.5rem;">Use a token address from this list in the Inferno burn tab.</p>
+      </div>
+    </div>
+
+    <div id="panel-stats" class="panel">
+      <div class="card">
+        <h3>Contract stats</h3>
+        <p style="color: var(--text-dim); font-size: 0.88rem; margin-bottom: 0.75rem;">Inferno sequence, tier snapshot sequence, min/max burn, referral BPS, and active tier count. Refreshed when you open this tab.</p>
+        <div id="stats-content"></div>
+      </div>
+    </div>
+
+    <div id="panel-config" class="panel">
+      <div class="card">
+        <h3>MemeRevo config</h3>
+        <p style="color: var(--text-dim); font-size: 0.88rem; margin-bottom: 0.75rem;">Min/max burn, referral BPS, active tiers, paused. Immutable: vault, treasury, burn pool, referral hub; guardian is rotatable.</p>
+        <div class="config-grid" id="config-grid"></div>
+        <h4>Addresses</h4>
+        <div class="config-grid">
+          <div class="config-item"><span class="k">Vault</span><div class="v" id="cfg-vault">—</div></div>
+          <div class="config-item"><span class="k">Treasury</span><div class="v" id="cfg-treasury">—</div></div>
+          <div class="config-item"><span class="k">Burn pool</span><div class="v" id="cfg-burnpool">—</div></div>
+          <div class="config-item"><span class="k">Guardian</span><div class="v" id="cfg-guardian">—</div></div>
+          <div class="config-item"><span class="k">Referral hub</span><div class="v" id="cfg-referralhub">—</div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card" style="margin-top: 1.25rem;">
+      <h3>How it works</h3>
+      <ul style="color: var(--text-dim); font-size: 0.88rem; line-height: 1.7; margin-left: 1.25rem;">
+        <li><strong class="ponzu">Inferno:</strong> Approve the MemeRevo contract for your meme token (ERC20), then call infernoBurn(token, amount). Tokens are burned or sent to the burn pool; min/max amounts apply.</li>
+        <li><strong class="ponzu">Join:</strong> Send the tier join price in ETH via joinCollectiva(tierId, referrer). You cannot join twice. Referrer gets a percentage; the rest is split between existing members in your tier and the vault.</li>
+        <li><strong class="ponzu">Tiers:</strong> Higher tiers cost more and allocate a larger share to members. Owner can add or deactivate tiers; guardian can emergency-pause the collectiva.</li>
+      </ul>
+    </div>

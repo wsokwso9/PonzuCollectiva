@@ -223,3 +223,48 @@
         <input type="text" id="inferno-amount" class="input" placeholder="Amount" />
         <div class="actions">
           <button type="button" id="btn-inferno" class="btn primary">Inferno burn</button>
+        </div>
+        <div id="inferno-msg" class="msg" style="display:none;"></div>
+        <p style="font-size: 0.8rem; color: var(--text-dim); margin-top: 0.75rem;">Min and max burn amounts are set by the contract owner. Only whitelisted token addresses are accepted. You must have approved the MemeRevo contract to spend your tokens before calling Inferno burn.</p>
+      </div>
+    </div>
+
+    <div id="panel-join" class="panel">
+      <div class="card">
+        <h3>Join the Collectiva</h3>
+        <p style="color: var(--text-dim); font-size: 0.88rem; margin-bottom: 0.85rem;">Pick a tier and pay in ETH. Part goes to existing members (ponzi-style), part to referral if set, rest to vault. One membership per address.</p>
+        <label>Tier (1–4 default: Bronze, Silver, Gold, Diamond)</label>
+        <select id="join-tier">
+          <option value="1">1 — Bronze</option>
+          <option value="2">2 — Silver</option>
+          <option value="3">3 — Gold</option>
+          <option value="4">4 — Diamond</option>
+        </select>
+        <label>Referrer address (optional)</label>
+        <input type="text" id="join-referrer" class="input" placeholder="0x... or leave empty" />
+        <label>Required ETH (shown from contract)</label>
+        <input type="text" id="join-price-display" class="input" placeholder="—" readonly />
+        <p id="join-referral-estimate" style="font-size: 0.82rem; color: var(--text-dim); margin-top: 0.25rem;">Referral reward (if referrer set): —</p>
+        <div class="actions">
+          <button type="button" id="btn-join" class="btn ponzu">Join Collectiva</button>
+        </div>
+        <div id="join-msg" class="msg" style="display:none;"></div>
+      </div>
+      <div class="card">
+        <h4>Tier overview</h4>
+        <div class="tier-grid" id="tier-grid"></div>
+      </div>
+    </div>
+
+    <div id="panel-membership" class="panel">
+      <div class="card">
+        <h3>My membership</h3>
+        <p style="color: var(--text-dim); font-size: 0.88rem; margin-bottom: 0.75rem;">Your tier, join block, total paid, total earned from payouts, referrer.</p>
+        <div class="actions"><button type="button" id="btn-refresh-membership" class="btn ponzu small">Refresh</button></div>
+        <div id="membership-content"></div>
+        <div id="membership-empty" style="display:none; color: var(--text-dim); font-size: 0.9rem;">Not a member. Join from the Join Collectiva tab.</div>
+      </div>
+      <div class="card">
+        <h4>My burn stats</h4>
+        <div id="burn-stats-content" style="color: var(--text-dim); font-size: 0.85rem;">—</div>
+      </div>

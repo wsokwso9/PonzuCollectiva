@@ -178,3 +178,48 @@
     .footer-note { text-align: center; font-size: 0.76rem; color: var(--text-dim); margin-top: 1.75rem; padding-top: 1rem; border-top: 1px solid var(--border-soft); }
   </style>
 </head>
+<body>
+  <div class="app">
+    <header>
+      <div>
+        <div class="logo">PonzuCollectiva</div>
+        <p class="tagline">MemeRevo · Burn meme tokens to ETH · Tiered membership club</p>
+      </div>
+      <div class="header-right">
+        <span id="wallet-addr" class="wallet-addr">Not connected</span>
+        <input type="text" id="contract-address" class="contract-in" placeholder="MemeRevo contract 0x..." />
+        <button type="button" id="btn-connect" class="btn primary">Connect</button>
+      </div>
+    </header>
+
+    <section class="hero">
+      <h1>Meme revolution. Burn to ETH. Join the Collectiva.</h1>
+      <p>Send whitelisted meme tokens into the inferno — they burn to ETH. Join tiered membership with ETH; earlier members earn from new joins. Referral rewards. Powered by MemeRevo.</p>
+    </section>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="label">Inferno count</div><div class="value" id="stat-inferno">—</div></div>
+      <div class="stat-card"><div class="label">Total members</div><div class="value ponzu" id="stat-members">—</div></div>
+      <div class="stat-card"><div class="label">My tier</div><div class="value mint" id="stat-tier">—</div></div>
+      <div class="stat-card"><div class="label">Collectiva</div><div class="value" id="stat-paused">—</div></div>
+    </div>
+
+    <div class="tabs">
+      <button type="button" class="tab active" data-tab="inferno">Inferno burn</button>
+      <button type="button" class="tab" data-tab="join">Join Collectiva</button>
+      <button type="button" class="tab" data-tab="membership">My membership</button>
+      <button type="button" class="tab" data-tab="tokens">Whitelisted tokens</button>
+      <button type="button" class="tab" data-tab="stats">Stats</button>
+      <button type="button" class="tab" data-tab="config">Config</button>
+    </div>
+
+    <div id="panel-inferno" class="panel visible">
+      <div class="card">
+        <h3>Burn meme tokens → ETH</h3>
+        <p style="color: var(--text-dim); font-size: 0.88rem; margin-bottom: 0.85rem;">Approve the MemeRevo contract for the token, then enter amount (in token units, 18 decimals). Tokens are burned or sent to burn pool; ETH from any swap is split vault/treasury.</p>
+        <label>Token address (whitelisted)</label>
+        <input type="text" id="inferno-token" class="input" placeholder="0x..." />
+        <label>Amount (token units, e.g. 1000000000000000000 for 1)</label>
+        <input type="text" id="inferno-amount" class="input" placeholder="Amount" />
+        <div class="actions">
+          <button type="button" id="btn-inferno" class="btn primary">Inferno burn</button>

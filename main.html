@@ -583,3 +583,48 @@
           });
         } catch (e) {
           empty.style.display = 'block';
+        }
+      }
+
+      document.getElementById('btn-refresh-tokens').addEventListener('click', loadTokens);
+
+      async function loadStats() {
+        const el = document.getElementById('stats-content');
+        const c = getContract(true);
+        if (!c) { el.innerHTML = '<p style="color: var(--text-dim);">Set contract address.</p>'; return; }
+        try {
+          const cfg = await c.getConfig();
+          const seq = await c.infernoSequence();
+          const snap = await c.tierSnapshotSequence();
+          let html = '<p>Inferno sequence: ' + seq.toString() + '</p>';
+          html += '<p>Tier snapshot sequence: ' + snap.toString() + '</p>';
+          html += '<p>Min burn: ' + cfg.minBurn_.toString() + ', Max burn per tx: ' + cfg.maxBurn_.toString() + '</p>';
+          html += '<p>Referral BPS: ' + cfg.referralBps_.toString() + ', Active tiers: ' + cfg.activeTierCount_.toString() + '</p>';
+          el.innerHTML = html;
+        } catch (e) { el.innerHTML = '<p class="msg err">' + (e.message || 'Load failed') + '</p>'; }
+      }
+
+      async function loadConfig() {
+        const grid = document.getElementById('config-grid');
+        const c = getContract(true);
+        grid.innerHTML = '';
+        if (!c) {
+          document.getElementById('cfg-vault').textContent = '—';
+          document.getElementById('cfg-treasury').textContent = '—';
+          document.getElementById('cfg-burnpool').textContent = '—';
+          document.getElementById('cfg-guardian').textContent = '—';
+          document.getElementById('cfg-referralhub').textContent = '—';
+          return;
+        }
+        try {
+          const addrs = await c.getImmutableAddresses();
+          document.getElementById('cfg-vault').textContent = addrs.vault_;
+          document.getElementById('cfg-treasury').textContent = addrs.treasury_;
+          document.getElementById('cfg-burnpool').textContent = addrs.burnPool_;
+          document.getElementById('cfg-guardian').textContent = addrs.guardian_;
+          document.getElementById('cfg-referralhub').textContent = addrs.referralHub_;
+          const cfg = await c.getConfig();
+          let balanceWei = '—';
+          try {
+            const bal = await c.contractBalance();
+            balanceWei = bal.toString();
